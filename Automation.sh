@@ -51,4 +51,35 @@ echo "Copying archive file to S3 bucket";
 aws s3 cp /tmp/Ankita-httpd-logs-${timestamp}.tar s3://${s3_bucket}
 
 
+#Task3
+
+#initializing the required variable
+inventoryFile=/var/www/html/inventory.html
+logType="httpd-logs"
+filename=${my_name}-httpd-logs-${timestamp}.tar
+type=${filename##*.}
+size=$(ls -lh /tmp/${filename}| cut -d " " -f5)
+
+#checking inventory.html file prsesnt or not,else creating it
+if ! test -f "$inventoryFile";
+then
+        echo "Inventory File is not available, creating a Inventory file";
+        touch ${inventoryFile}
+        echo "<b>Log Type&nbsp;&nbsp;&nbsp;&nbsp;Time Created&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type&nbsp;&nbsp;Size</b$
+fi
+        echo "<br>${logType}&nbsp;&nbsp;&nbsp;&nbsp;${timestamp}&nbsp;&nbsp;&nbsp;&nbsp;${type}&nbsp;&nbsp;&nbsp;&nbsp;${size}">>${inventoryFile}
+        echo "Inventory file has been updated";
+
+#checking cronfile present or not else creating cronfile
+cronFile=/etc/cron.d/automation
+if test -f "$cronFile";
+then
+        echo "Cron Job file is already available";
+else
+        echo "Cron Job is not available, creating a Cron job file";
+        touch ${cronFile}
+        echo '1
+ * * * * root /root/Automation_Project/automation.sh'>${cronFile}
+        echo "Cron Job file has been created";
+fi
 
